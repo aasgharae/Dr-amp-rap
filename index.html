@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>dr amiripour</title>
+<meta name="theme-color" content="#0f6e56">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<style>
+:root{--bg:#f6f5f1;--cd:#fff;--tx:#1f1f1d;--mu:#6b6a65;--bd:#dedcd4;--ac:#0f6e56;--acb:#e1f5ee;--rd:#a32d2d;--rdb:#fcebeb;--am:#854f0b;--amb:#faeeda;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1c1a;--cd:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3d3d3a;--ac:#5dcaa5;--acb:#04342c;--rd:#f09595;--rdb:#501313;--am:#fac775;--amb:#412402;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1c1a;--cd:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3d3d3a;--ac:#5dcaa5;--acb:#04342c;--rd:#f09595;--rdb:#501313;--am:#fac775;--amb:#412402;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 Vazirmatn,Tahoma,sans-serif;padding:12px 14px 40px;max-width:640px;margin-inline:auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 12px}
+input,button,textarea,select{font:inherit;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;box-sizing:border-box}
+input,textarea,select{width:100%;margin:4px 0}
+button{cursor:pointer}
+button.pri{background:var(--ac);color:var(--bg);border-color:var(--ac);font-weight:500}
+button.dn{color:var(--rd);border-color:var(--rd)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bar{display:flex;gap:8px;margin-bottom:10px}.bar .pri{flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chip{padding:6px 11px;font-size:14px}.chip.on{background:var(--acb);border-color:var(--ac);color:var(--ac)}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0}
+.mu{color:var(--mu)}.s{font-size:13px}
+.bg{display:inline-block;font-size:12px;padding:1px 8px;border-radius:6px;margin-inline-end:6px}
+.bg.r{background:var(--rdb);color:var(--rd)}.bg.a{background:var(--amb);color:var(--am)}
+.lb{font-size:13px;color:var(--mu);margin-top:6px;display:block}
+#bat input{width:90px;margin:0}
+.dt{display:flex;gap:6px}.dt input{text-align:center}
+#ft{text-align:center;margin-top:28px;font-size:13px;color:var(--mu)}
+</style></head><body>
+<h1>dr amiripour</h1>
+<div class="bar"><button class="pri" id="add">+ افزودن دارو / کالا</button><button id="bkb">تنظیمات و پشتیبان</button></div>
+
+<section id="form" class="card" hidden>
+<span class="lb">نوع</span>
+<select id="cat"><option value="human">دارو (انسانی)</option><option value="poultry">طیور</option><option value="livestock">دامی</option><option value="pet">پت‌شاپ</option></select>
+<span class="lb">اسم</span><input id="name">
+<span class="lb">حداقل موجودی</span><input id="min" type="number" min="0" inputmode="numeric">
+<div id="bat"></div>
+<span class="lb">فروش از کدوم سری؟</span><select id="ob"></select>
+<span class="lb">تعداد خروجی / فروش</span><input id="out" type="number" min="0" inputmode="numeric">
+<span class="lb">تعداد ورودی (به موجودی اضافه می‌شه)</span><input id="qty" type="number" min="0" inputmode="numeric">
+<span class="lb">تاریخ انقضای ورودی</span>
+<select id="cal"><option value="j">شمسی</option><option value="g">میلادی</option></select>
+<div class="dt"><input id="ey" inputmode="numeric" placeholder="سال"><input id="em" inputmode="numeric" placeholder="ماه"><input id="ed" inputmode="numeric" placeholder="روز (اختیاری)"></div>
+<p id="msg" class="s mu"></p>
+<div class="row"><button class="pri" id="sv">ذخیره</button><button id="cc">بستن</button><button class="dn" id="del">حذف</button></div>
+</section>
+
+<section id="bks" class="card" hidden>
+<span class="lb">هشدار انقضا: چند روز مونده؟</span><input id="days" type="number" min="1" inputmode="numeric">
+<span class="lb">پشتیبان‌گیری: «گرفتن پشتیبان» رو بزن، متن کپی می‌شه، برای همکارت بفرست. اون متن رو توی کادر بذاره و «بازیابی» رو بزنه.</span>
+<textarea id="bk" rows="4"></textarea>
+<div class="row"><button class="pri" id="ex">گرفتن پشتیبان</button><button class="dn" id="im">بازیابی (جایگزین همه‌چی)</button></div>
+<p id="bmsg" class="s mu"></p>
+</section>
+
+<input id="q" placeholder="جستجو اسم">
+<select id="fc"><option value="all">همه نوع‌ها</option><option value="human">دارو (انسانی)</option><option value="poultry">طیور</option><option value="livestock">دامی</option><option value="pet">پت‌شاپ</option></select>
+<div class="chips">
+<button class="chip" data-f="all">همه <b>0</b></button>
+<button class="chip" data-f="short">کسری <b>0</b></button>
+<button class="chip" data-f="min">حداقل <b>0</b></button>
+<button class="chip" data-f="exp">انقضا <b>0</b></button>
+</div>
+<div id="list"></div>
+<div id="ft"></div>
+
+<script>
+const K='pharm_v1',CT={human:'دارو (انسانی)',poultry:'طیور',livestock:'دامی',pet:'پت‌شاپ'};let db={items:{},days:90,cal:'j'},filter='all',cur='';
+const $=id=>document.getElementById(id),save=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}},msg=t=>{$('msg').textContent=t};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),p2=n=>String(n).padStart(2,'0'),iso=(y,m,d)=>y+'-'+p2(m)+'-'+p2(d);
+function g2j(gy,gm,gd){const g=[0,31,59,90,120,151,181,212,243,273,304,334],y2=gm>2?gy+1:gy;let n=355666+365*gy+~~((y2+3)/4)-~~((y2+99)/100)+~~((y2+399)/400)+gd+g[gm-1],jy=-1595+33*~~(n/12053);n%=12053;jy+=4*~~(n/1461);n%=1461;if(n>365){jy+=~~((n-1)/365);n=(n-1)%365}
+return n<186?[jy,1+~~(n/31),1+n%31]:[jy,7+~~((n-186)/30),1+(n-186)%30]}
+function j2g(jy,jm,jd){jy+=1595;let n=-355668+365*jy+~~(jy/33)*8+~~(((jy%33)+3)/4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186),gy=400*~~(n/146097);n%=146097;if(n>36524){gy+=100*~~(--n/36524);n%=36524;if(n>=365)n++}gy+=4*~~(n/1461);n%=1461;if(n>365){gy+=~~((n-1)/365);n=(n-1)%365}
+let gd=n+1;const s=[0,31,(gy%4==0&&gy%100!=0)||gy%400==0?29:28,31,30,31,30,31,31,30,31,30,31];let gm=0;for(;gm<13&&gd>s[gm];gm++)gd-=s[gm];return[gy,gm,gd]}
+function mig(){Object.entries(db.items).forEach(([k,i])=>{i.id=i.id||k;i.cat=i.cat||'human';i.batches.forEach(b=>{if(b.exp&&b.exp.length===7){const[y,m]=b.exp.split('-').map(Number);b.exp=iso(y,m,new Date(y,m,0).getDate())}})});db.cal=db.cal||'j';db.days=db.days||90}
+try{const s=localStorage.getItem(K);if(s)db=JSON.parse(s)}catch(e){}mig();
+const tot=i=>i.batches.reduce((a,b)=>a+b.qty,0),exps=i=>i.batches.filter(b=>b.qty>0&&b.exp).map(b=>b.exp).sort();
+const dl=e=>{const[y,m,d]=e.split('-').map(Number);return Math.ceil((new Date(y,m-1,d,23,59,59)-new Date())/864e5)};
+function fmt(e){const[y,m,d]=e.split('-').map(Number);if(db.cal==='j'){const[a,b,c]=g2j(y,m,d);return a+'/'+p2(b)+'/'+p2(c)}return e}
+function toISO(){const c=$('cal').value,y=+$('ey').value,m=+$('em').value,d=+$('ed').value;
+if(!y||!m||m<1||m>12||d<0||d>31)return null;
+if(c==='g'){if(y<2000||y>2100)return null;return iso(y,m,d||new Date(y,m,0).getDate())}
+if(y<1380||y>1500)return null;const g=j2g(y,m,d||(m<=6?31:m<=11?30:29));return iso(g[0],g[1],g[2])}
+function st(i){const t=tot(i),s=[],e=exps(i)[0];if(t===0)s.push('short');else if(t<=i.min)s.push('min');if(e&&dl(e)<=db.days)s.push('exp');return s}
+function card(i){const t=tot(i),s=st(i),e=exps(i)[0],d=e?dl(e):0;let b='';
+if(s.includes('short'))b+='<span class="bg r">کسری</span>';if(s.includes('min'))b+='<span class="bg a">حداقل</span>';
+if(s.includes('exp'))b+=`<span class="bg ${d<0?'r':'a'}">${d<0?'منقضی شده':d+' روز تا انقضا'}</span>`;
+return `<div class="card" data-c="${esc(i.id)}"><div class="row"><b>${esc(i.name)}</b><b>${t}</b></div><div class="mu s">${CT[i.cat]||''} · حداقل ${i.min}${e?' · نزدیک‌ترین انقضا '+fmt(e):''}</div><div>${b}</div></div>`}
+function render(){const q=$('q').value.trim().toLowerCase(),fc=$('fc').value,base=Object.values(db.items).filter(i=>fc==='all'||i.cat===fc),c={all:base.length,short:0,min:0,exp:0};
+base.forEach(i=>st(i).forEach(s=>c[s]++));
+document.querySelectorAll('.chip').forEach(b=>{b.classList.toggle('on',b.dataset.f===filter);b.firstElementChild.textContent=c[b.dataset.f]});
+const L=base.filter(i=>(filter==='all'||st(i).includes(filter))&&(!q||i.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+$('list').innerHTML=L.length?L.map(card).join(''):'<p class="mu">چیزی نیست.</p>'}
+function openItem(id){cur=id;const i=db.items[id];$('form').hidden=false;$('cat').value=i?i.cat:($('fc').value!=='all'?$('fc').value:'human');$('name').value=i?i.name:'';$('min').value=i?i.min:'';
+$('qty').value='';$('out').value='';$('ey').value='';$('em').value='';$('ed').value='';$('cal').value=db.cal;
+$('bat').innerHTML=i?i.batches.map((b,k)=>`<div class="row"><span>سری با انقضا ${fmt(b.exp)}</span><input type="number" min="0" data-k="${k}" value="${b.qty}"></div>`).join(''):'';
+$('ob').innerHTML='<option value="">انتخاب سری</option>'+(i?i.batches.map((b,k)=>`<option value="${k}">انقضا ${fmt(b.exp)} (موجود ${b.qty})</option>`).join(''):'');
+$('del').hidden=!i;msg(i?'ثبت بوده. تعداد جدید رو اضافه کن، یا از یه سری مشخص کم کن.':'');$('form').scrollIntoView()}
+function saveItem(){const name=$('name').value.trim(),cat=$('cat').value,q=+$('qty').value||0,o=+$('out').value||0,ok=$('ob').value;
+if(!name)return msg('اسم رو بزن');
+let exp='';if(q>0||$('ey').value||$('em').value){exp=toISO();if(!exp)return msg('تاریخ انقضا درست نیست. سال و ماه لازمه.')}
+let i=db.items[cur];
+if(o>0){if(!i)return msg('فروش فقط برای کالای ثبت‌شده‌ست');if(ok==='')return msg('سری رو انتخاب کن');
+const bi=document.querySelector('#bat input[data-k="'+ok+'"]'),t0=bi?+bi.value||0:0;if(o>t0)return msg('این سری فقط '+t0+' تا موجوده')}
+if(!i){i=Object.values(db.items).find(x=>x.cat===cat&&x.name.toLowerCase()===name.toLowerCase());if(!i){const id='i'+Date.now().toString(36);i=db.items[id]={id,name,cat,min:0,batches:[]}}}
+i.name=name;i.cat=cat;i.min=+$('min').value||0;
+document.querySelectorAll('#bat input').forEach(x=>{const b=i.batches[+x.dataset.k];if(b)b.qty=+x.value||0});
+if(o>0)i.batches[+ok].qty-=o;
+if(q>0){const b=i.batches.find(b=>b.exp===exp);b?b.qty+=q:i.batches.push({qty:q,exp})}
+i.batches=i.batches.filter(b=>b.qty>0);save();$('form').hidden=true;render()}
+const armed={};function arm(b,fn){if(armed[b.id]){clearTimeout(armed[b.id]);armed[b.id]=0;b.textContent=b.dataset.t;fn();return}
+b.dataset.t=b.textContent;b.textContent='مطمئنی؟ دوباره بزن';armed[b.id]=setTimeout(()=>{armed[b.id]=0;b.textContent=b.dataset.t},4000)}
+$('add').onclick=()=>openItem('');$('cc').onclick=()=>{$('form').hidden=true};$('sv').onclick=saveItem;
+$('cal').onchange=()=>{db.cal=$('cal').value;save();render()};
+$('del').onclick=e=>arm(e.target,()=>{delete db.items[cur];save();$('form').hidden=true;render()});
+$('bkb').onclick=()=>{$('bks').hidden=!$('bks').hidden;$('days').value=db.days};
+$('days').onchange=()=>{db.days=+$('days').value||90;save();render()};
+$('ex').onclick=()=>{const t=JSON.stringify(db);$('bk').value=t;$('bk').select();$('bmsg').textContent='متن پشتیبان توی کادر اومد. کپی کن و بفرست.';
+try{navigator.clipboard.writeText(t).then(()=>{$('bmsg').textContent='کپی شد. بفرست برای همکارت.'},()=>{})}catch(e){}};
+$('im').onclick=e=>arm(e.target,()=>{try{const o=JSON.parse($('bk').value.trim());if(!o||typeof o.items!=='object')throw 0;db={items:o.items,days:+o.days||90,cal:o.cal||'j'};mig();save();$('days').value=db.days;render();$('bmsg').textContent='بازیابی شد: '+Object.keys(db.items).length+' قلم'}catch(x){$('bmsg').textContent='متن پشتیبان درست نیست'}});
+$('q').oninput=render;$('fc').onchange=render;$('list').onclick=e=>{const c=e.target.closest('.card');if(c)openItem(c.dataset.c)};
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{filter=b.dataset.f;render()});
+function clock(){const n=new Date();$('ft').textContent='امروز: '+n.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' | '+n.toLocaleDateString('en-CA')+' | ساعت '+n.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}
+setInterval(clock,20000);clock();document.addEventListener('visibilitychange',()=>{clock();render()});
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
