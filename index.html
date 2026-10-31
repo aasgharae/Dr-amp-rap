@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>dr amiripour</title>
+<meta name="theme-color" content="#0f6e56"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#f6f5f1;--cd:#fff;--tx:#1f1f1d;--mu:#6b6a65;--bd:#dedcd4;--ac:#0f6e56;--acb:#e1f5ee;--rd:#a32d2d;--rdb:#fcebeb;--am:#854f0b;--amb:#faeeda;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1c1a;--cd:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3d3d3a;--ac:#5dcaa5;--acb:#04342c;--rd:#f09595;--rdb:#501313;--am:#fac775;--amb:#412402;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1c1a;--cd:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3d3d3a;--ac:#5dcaa5;--acb:#04342c;--rd:#f09595;--rdb:#501313;--am:#fac775;--amb:#412402;color-scheme:dark}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 Vazirmatn,Tahoma,sans-serif;padding:max(12px,env(safe-area-inset-top)) 14px 40px;max-width:640px;margin-inline:auto}
+h1{font-size:20px;font-weight:500;margin:4px 0 12px}h2{font-size:17px;font-weight:500;margin:4px 0}
+input,button,textarea,select{font:inherit;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;box-sizing:border-box}
+input,textarea,select{width:100%;margin:4px 0}button{cursor:pointer}
+button.pri{background:var(--ac);color:var(--bg);border-color:var(--ac);font-weight:500}button.dn{color:var(--rd);border-color:var(--rd)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.bar{display:flex;gap:8px;margin-bottom:10px}.bar>*{flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.chip,.tab{padding:6px 11px;font-size:14px}.chip.on,.tab.on{background:var(--acb);border-color:var(--ac);color:var(--ac)}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0}
+.mu{color:var(--mu)}.s{font-size:13px}
+.bg{display:inline-block;font-size:12px;padding:1px 8px;border-radius:6px;margin-inline-end:6px}
+.bg.r{background:var(--rdb);color:var(--rd)}.bg.a{background:var(--amb);color:var(--am)}.bg.g{background:var(--acb);color:var(--ac)}
+.lb{font-size:13px;color:var(--mu);margin-top:6px;display:block}
+#bat input{width:90px;margin:0}.dt{display:flex;gap:6px}.dt input{text-align:center}
+#sg button{margin:2px 0 2px 6px;font-size:13px;padding:4px 9px}
+#ft{text-align:center;margin-top:28px;font-size:13px;color:var(--mu)}
+#lock{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;background:var(--bg);z-index:9;text-align:center}
+#pin{width:160px;text-align:center;font-size:28px;letter-spacing:10px}
+</style></head><body>
+
+<div id="lock"><h1>dr amiripour</h1><div id="lt"></div><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off">
+<div id="lm" class="s" style="color:var(--rd)"></div>
+<button id="fg" class="s">رمز رو فراموش کردم</button>
+<div id="mpw" hidden><input id="mp" type="password" placeholder="رمز اصلی" style="width:180px"><button id="mgo" class="pri">باز کن</button></div></div>
+
+<div id="app" hidden>
+<h1>dr amiripour</h1>
+<div id="load" class="card mu" hidden></div>
+<div class="bar"><button class="tab on" id="t1">موجودی</button><button class="tab" id="t2">قرض و بدهی</button><button id="st">تنظیمات</button></div>
+
+<section id="bks" class="card" hidden>
+<h2>تنظیمات</h2>
+<span class="lb">هشدار انقضا: چند روز مونده؟</span><input id="days" inputmode="numeric">
+<span class="lb">پشتیبان‌گیری</span>
+<div class="bar"><button class="pri" id="ex">ارسال پشتیبان (تلگرام، واتساپ، ...)</button></div>
+<div class="bar"><button class="dn" id="im">بازیابی از فایل پشتیبان</button></div>
+<input id="fl" type="file" hidden>
+<span class="lb">نسخه‌های خودکار (۷ روز آخر):</span><div id="snaps" class="chips"></div>
+<span class="lb">وارد کردن پشتیبان متنی نسخه قدیمی (آزمایشی)</span><textarea id="bk" rows="2"></textarea>
+<button class="dn" id="ol">وارد کن (جایگزین همه‌چی)</button>
+<span class="lb">تغییر رمز ورود</span>
+<div class="dt"><input id="op" type="password" inputmode="numeric" maxlength="4" placeholder="رمز فعلی"><input id="np" type="password" inputmode="numeric" maxlength="4" placeholder="رمز جدید"></div>
+<button id="cp">تغییر رمز</button>
+<p id="bmsg" class="s mu"></p>
+</section>
+
+<div id="v1">
+<button class="pri" id="add" style="width:100%;margin-bottom:10px">+ افزودن دارو / کالا</button>
+<section id="form" class="card" hidden>
+<span class="lb">نوع</span><select id="cat"><option value="human">دارو (انسانی)</option><option value="poultry">طیور</option><option value="livestock">دامی</option><option value="pet">پت‌شاپ</option></select>
+<span class="lb">اسم</span><input id="name" autocomplete="off"><div id="sg"></div>
+<span class="lb">حداقل موجودی</span><input id="min" inputmode="numeric">
+<div id="bat"></div>
+<span class="lb">فروش از کدوم سری؟</span><select id="ob"></select>
+<span class="lb">تعداد خروجی / فروش</span><input id="out" inputmode="numeric">
+<span class="lb">تعداد ورودی (به موجودی اضافه می‌شه)</span><input id="qty" inputmode="numeric">
+<span class="lb">تاریخ انقضای ورودی</span>
+<select id="ec"><option value="j">شمسی</option><option value="g">میلادی</option></select>
+<div class="dt"><input id="ey" inputmode="numeric" placeholder="سال"><input id="em" inputmode="numeric" placeholder="ماه"><input id="ed" inputmode="numeric" placeholder="روز (اختیاری)"></div>
+<p id="msg" class="s mu"></p>
+<div class="row"><button class="pri" id="sv">ذخیره</button><button id="cc">بستن</button><button class="dn" id="del">حذف</button></div>
+</section>
+<input id="q" placeholder="جستجوی هوشمند: اسم (غلط املایی و ی/ک عربی مهم نیست)">
+<select id="fc"><option value="all">همه نوع‌ها</option><option value="human">دارو (انسانی)</option><option value="poultry">طیور</option><option value="livestock">دامی</option><option value="pet">پت‌شاپ</option></select>
+<div class="chips"><button class="chip" data-f="all">همه <b>0</b></button><button class="chip" data-f="short">کسری <b>0</b></button><button class="chip" data-f="min">حداقل <b>0</b></button><button class="chip" data-f="exp">انقضا <b>0</b></button></div>
+<div id="list"></div>
+</div>
+
+<div id="v2" hidden>
+<div id="pl0">
+<div class="row"><input id="pn" placeholder="اسم فرد جدید"><button class="pri" id="pa">افزودن</button></div>
+<input id="pq" placeholder="جستجوی اسم">
+<div id="pl"></div>
+</div>
+<div id="pp" hidden>
+<button id="pb">« برگشت به لیست افراد</button>
+<span class="lb">اسم (تغییر بده و خارج شو)</span><input id="pname">
+<div class="card">
+<span class="lb">ثبت جدید</span>
+<select id="dir"><option value="gave">به او دادم</option><option value="got">از او گرفتم</option></select>
+<span class="lb">مبلغ (تومان)</span><input id="amt" inputmode="numeric">
+<span class="lb">تاریخ</span><select id="dc"><option value="j">شمسی</option><option value="g">میلادی</option></select>
+<div class="dt"><input id="dy" inputmode="numeric" placeholder="سال"><input id="dm" inputmode="numeric" placeholder="ماه"><input id="dd" inputmode="numeric" placeholder="روز"></div>
+<span class="lb">توضیح (اختیاری)</span><input id="note">
+<p id="emsg" class="s mu"></p>
+<div class="row"><button class="pri" id="es">ذخیره</button><button id="er">جدید</button><button class="dn" id="edel">حذف این ثبت</button></div>
+</div>
+<div id="el"></div>
+<button class="dn" id="pdel" style="width:100%;margin-top:14px">حذف این فرد و همه ثبت‌هاش</button>
+</div>
+</div>
+<div id="ft"></div>
+</div>
+
+<script>
+const CT={human:'دارو (انسانی)',poultry:'طیور',livestock:'دامی',pet:'پت‌شاپ'},SCHEMA=`CREATE TABLE IF NOT EXISTS items(id TEXT PRIMARY KEY,name TEXT,cat TEXT,min INTEGER);CREATE TABLE IF NOT EXISTS batches(item_id TEXT,qty INTEGER,exp TEXT);CREATE TABLE IF NOT EXISTS people(id INTEGER PRIMARY KEY,name TEXT);CREATE TABLE IF NOT EXISTS entries(id INTEGER PRIMARY KEY,person_id INTEGER,date TEXT,dir TEXT,amount REAL,note TEXT);CREATE TABLE IF NOT EXISTS settings(k TEXT PRIMARY KEY,v TEXT);`;
+let S,SQL,db={items:{},people:{},days:90,cal:'j'},filter='all',cur='',curP=0,curE=0,pt,mode,tmp,ready;
+const $=id=>document.getElementById(id),msg=t=>{$('msg').textContent=t},bmsg=t=>{$('bmsg').textContent=t},emsg=t=>{$('emsg').textContent=t};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),p2=n=>String(n).padStart(2,'0'),iso=(y,m,d)=>y+'-'+p2(m)+'-'+p2(d);
+const nz=s=>String(s==null?'':s).toLowerCase().replace(/[يى]/g,'ی').replace(/ك/g,'ک').replace(/[ۀة]/g,'ه').replace(/[أإآ]/g,'ا').replace(/[\u064B-\u065F\u0670\u200c\u200d\u0640]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\s+/g,' ').trim();
+const n=v=>+(nz(v).replace(/[^\d]/g,''))||0;
+function sub(t,w){let j=0;for(const c of t){if(c===w[j])j++;if(j===w.length)return true}return false}
+function sc(name,q){const t=nz(name),w=nz(q).split(' ').filter(Boolean);if(!w.length)return 0;let s=0;for(const x of w){if(t.includes(x))s+=0;else if(x.length>=4&&sub(t,x))s+=1;else return -1}return s}
+const sm=(name,q)=>sc(name,q)>=0;
+/* تاریخ */
+function g2j(gy,gm,gd){const g=[0,31,59,90,120,151,181,212,243,273,304,334],y2=gm>2?gy+1:gy;let k=355666+365*gy+~~((y2+3)/4)-~~((y2+99)/100)+~~((y2+399)/400)+gd+g[gm-1],jy=-1595+33*~~(k/12053);k%=12053;jy+=4*~~(k/1461);k%=1461;if(k>365){jy+=~~((k-1)/365);k=(k-1)%365}return k<186?[jy,1+~~(k/31),1+k%31]:[jy,7+~~((k-186)/30),1+(k-186)%30]}
+function j2g(jy,jm,jd){jy+=1595;let k=-355668+365*jy+~~(jy/33)*8+~~(((jy%33)+3)/4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186),gy=400*~~(k/146097);k%=146097;if(k>36524){gy+=100*~~(--k/36524);k%=36524;if(k>=365)k++}gy+=4*~~(k/1461);k%=1461;if(k>365){gy+=~~((k-1)/365);k=(k-1)%365}let gd=k+1;const s=[0,31,(gy%4==0&&gy%100!=0)||gy%400==0?29:28,31,30,31,30,31,31,30,31,30,31];let gm=0;for(;gm<13&&gd>s[gm];gm++)gd-=s[gm];return[gy,gm,gd]}
+const fmt=e=>{const[y,m,d]=e.split('-').map(Number);if(db.cal==='j'){const[a,b,c]=g2j(y,m,d);return a+'/'+p2(b)+'/'+p2(c)}return e};
+const todayISO=()=>{const t=new Date();return iso(t.getFullYear(),t.getMonth()+1,t.getDate())};
+function getDate(px,c){c=c||$(px+'c').value;const y=n($(px+'y').value),m=n($(px+'m').value),d=n($(px+'d').value);if(!y||m<1||m>12||d>31)return null;
+if(c==='g'){if(y<2000||y>2100)return null;return iso(y,m,d||new Date(y,m,0).getDate())}
+if(y<1380||y>1500)return null;const g=j2g(y,m,d||(m<=6?31:m<=11?30:29));return iso(g[0],g[1],g[2])}
+function setDate(px,e){const c=$(px+'c').value;let a=['','',''];if(e){const[y,m,d]=e.split('-').map(Number);a=c==='g'?[y,m,d]:g2j(y,m,d)}$(px+'y').value=a[0];$(px+'m').value=a[1];$(px+'d').value=a[2]}
+const dl=e=>{const[y,m,d]=e.split('-').map(Number);return Math.ceil((new Date(y,m-1,d,23,59,59)-new Date())/864e5)};
+/* ذخیره‌سازی: IndexedDB + SQLite */
+const idb=new Promise((res,rej)=>{const r=indexedDB.open('amiripour',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const kv=(m,f)=>idb.then(d=>new Promise((res,rej)=>{const t=d.transaction('kv',m),q=f(t.objectStore('kv'));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)}));
+const kget=k=>kv('readonly',s=>s.get(k)),kset=(k,v)=>kv('readwrite',s=>s.put(v,k)),kdel=k=>kv('readwrite',s=>s.delete(k)),kkeys=()=>kv('readonly',s=>s.getAllKeys());
+async function loadSQL(){for(const b of ['./','https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/']){try{await new Promise((ok,no)=>{const s=document.createElement('script');s.src=b+'sql-wasm.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});return await initSqlJs({locateFile:f=>b+f})}catch(e){}}throw 0}
+const q=sql=>{const r=S.exec(sql);return r.length?r[0].values:[]};
+function readAll(){db={items:{},people:{},days:90,cal:'j'};
+q('SELECT id,name,cat,min FROM items').forEach(([id,name,cat,min])=>db.items[id]={id,name,cat,min,batches:[]});
+q('SELECT item_id,qty,exp FROM batches').forEach(([i,qty,exp])=>db.items[i]&&db.items[i].batches.push({qty,exp}));
+q('SELECT id,name FROM people').forEach(([id,name])=>db.people[id]={id,name,entries:[]});
+q('SELECT id,person_id,date,dir,amount,note FROM entries').forEach(([id,p,date,dir,amount,note])=>db.people[p]&&db.people[p].entries.push({id,date,dir,amount,note}));
+q('SELECT k,v FROM settings').forEach(([k,v])=>{if(k==='days')db.days=+v||90;if(k==='cal')db.cal=v})}
+function writeAll(){S.run('BEGIN');try{S.run('DELETE FROM items;DELETE FROM batches;DELETE FROM people;DELETE FROM entries;DELETE FROM settings');
+for(const i of Object.values(db.items)){S.run('INSERT INTO items VALUES(?,?,?,?)',[i.id,i.name,i.cat,i.min]);i.batches.forEach(b=>S.run('INSERT INTO batches VALUES(?,?,?)',[i.id,b.qty,b.exp]))}
+for(const p of Object.values(db.people)){S.run('INSERT INTO people VALUES(?,?)',[p.id,p.name]);p.entries.forEach(e=>S.run('INSERT INTO entries VALUES(?,?,?,?,?,?)',[e.id,p.id,e.date,e.dir,e.amount,e.note||'']))}
+S.run('INSERT INTO settings VALUES(?,?)',['days',String(db.days)]);S.run('INSERT INTO settings VALUES(?,?)',['cal',db.cal]);S.run('COMMIT')}catch(e){S.run('ROLLBACK');throw e}}
+const persist=()=>{clearTimeout(pt);pt=setTimeout(doPersist,250)};
+async function doPersist(){try{writeAll();const d=S.export();await kset('db',d);const k='s:'+todayISO(),ks=(await kkeys()).filter(x=>String(x).startsWith('s:')).sort();await kset(k,d);if(!ks.includes(k))ks.push(k);while(ks.length>7)await kdel(ks.shift())}catch(e){bmsg('خطا در ذخیره: '+e.message)}}
+addEventListener('pagehide',()=>{clearTimeout(pt);try{doPersist()}catch(e){}});
+function mig(){Object.entries(db.items).forEach(([k,i])=>{i.id=i.id||k;i.cat=i.cat||'human';i.min=i.min||0;i.batches=i.batches||[];i.batches.forEach(b=>{if(b.exp&&b.exp.length===7){const[y,m]=b.exp.split('-').map(Number);b.exp=iso(y,m,new Date(y,m,0).getDate())}})})}
+async function openDB(){SQL=await loadSQL();const d=await kget('db');S=d?new SQL.Database(d):new SQL.Database();S.run(SCHEMA);readAll();try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
+/* رمز */
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('amp|'+s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+function lockUI(t,m){$('lt').textContent=t;$('pin').value='';$('lm').textContent=m||'';$('pin').focus()}
+mode=localStorage.getItem('pin_h')?'enter':'set';lockUI(mode==='set'?'یه رمز ۴ رقمی برای ورود انتخاب کن':'رمز ورود رو بزن');
+$('pin').oninput=async()=>{const v=nz($('pin').value).replace(/\D/g,'');$('pin').value=v;if(v.length<4)return;
+if(mode==='enter'){if(await sha(v)===localStorage.getItem('pin_h'))unlock();else lockUI('رمز ورود رو بزن','رمز اشتباهه')}
+else if(mode==='set'){tmp=v;mode='confirm';lockUI('رمز رو دوباره بزن')}
+else{if(v===tmp){localStorage.setItem('pin_h',await sha(v));unlock()}else{mode='set';lockUI('رمز جدید رو انتخاب کن','یکی نبودن، دوباره')}}};
+$('fg').onclick=()=>{$('mpw').hidden=!$('mpw').hidden};
+$('mgo').onclick=()=>{if($('mp').value.trim()==='admin')unlock();else $('lm').textContent='رمز اصلی اشتباهه'};
+ready=openDB();ready.catch(()=>{});
+async function unlock(){$('lock').hidden=true;$('app').hidden=false;$('load').hidden=false;$('load').textContent='در حال بارگذاری...';
+try{await ready}catch(e){$('load').innerHTML='دیتابیس باز نشد. برای اولین اجرا اینترنت لازمه. <button onclick="location.reload()">دوباره</button>';return}
+$('load').hidden=true;initUI()}
+function initUI(){$('ec').value=$('dc').value=db.cal;$('ec').dataset.p=$('dc').dataset.p=db.cal;$('days').value=db.days;render();renderP()}
+/* موجودی */
+const tot=i=>i.batches.reduce((a,b)=>a+b.qty,0),exps=i=>i.batches.filter(b=>b.qty>0&&b.exp).map(b=>b.exp).sort();
+function st(i){const t=tot(i),s=[],e=exps(i)[0];if(t===0)s.push('short');else if(t<=i.min)s.push('min');if(e&&dl(e)<=db.days)s.push('exp');return s}
+function card(i){const t=tot(i),s=st(i),e=exps(i)[0],d=e?dl(e):0;let b='';
+if(s.includes('short'))b+='<span class="bg r">کسری</span>';if(s.includes('min'))b+='<span class="bg a">حداقل</span>';
+if(s.includes('exp'))b+=`<span class="bg ${d<0?'r':'a'}">${d<0?'منقضی شده':d+' روز تا انقضا'}</span>`;
+return `<div class="card" data-c="${esc(i.id)}"><div class="row"><b>${esc(i.name)}</b><b>${t}</b></div><div class="mu s">${CT[i.cat]||''} · حداقل ${i.min}${e?' · نزدیک‌ترین انقضا '+fmt(e):''}</div><div>${b}</div></div>`}
+function render(){const qq=$('q').value,fc=$('fc').value,base=Object.values(db.items).filter(i=>fc==='all'||i.cat===fc),c={all:base.length,short:0,min:0,exp:0};
+base.forEach(i=>st(i).forEach(s=>c[s]++));
+document.querySelectorAll('.chip').forEach(b=>{b.classList.toggle('on',b.dataset.f===filter);b.firstElementChild.textContent=c[b.dataset.f]});
+const L=base.filter(i=>(filter==='all'||st(i).includes(filter))&&sm(i.name,qq)).map(i=>[sc(i.name,qq),i]).sort((a,b)=>a[0]-b[0]||a[1].name.localeCompare(b[1].name,'fa')).map(x=>x[1]);
+$('list').innerHTML=L.length?L.map(card).join(''):'<p class="mu">چیزی نیست.</p>'}
+function openItem(id){cur=id;const i=db.items[id];$('form').hidden=false;$('cat').value=i?i.cat:($('fc').value!=='all'?$('fc').value:'human');$('name').value=i?i.name:'';$('min').value=i?i.min:'';
+$('qty').value='';$('out').value='';$('sg').innerHTML='';$('ec').value=db.cal;$('ec').dataset.p=db.cal;setDate('e',null);
+$('bat').innerHTML=i?i.batches.map((b,k)=>`<div class="row"><span>سری با انقضا ${fmt(b.exp)}</span><input inputmode="numeric" data-k="${k}" value="${b.qty}"></div>`).join(''):'';
+$('ob').innerHTML='<option value="">انتخاب سری</option>'+(i?i.batches.map((b,k)=>`<option value="${k}">انقضا ${fmt(b.exp)} (موجود ${b.qty})</option>`).join(''):'');
+$('del').hidden=!i;msg(i?'ثبت بوده. تعداد جدید رو اضافه کن، یا از یه سری مشخص کم کن.':'');$('form').scrollIntoView()}
+function saveItem(){const name=$('name').value.trim(),cat=$('cat').value,qn=n($('qty').value),o=n($('out').value),ok=$('ob').value;
+if(!name)return msg('اسم رو بزن');
+let exp='';if(qn>0||$('ey').value||$('em').value){exp=getDate('e');if(!exp)return msg('تاریخ انقضا درست نیست. سال و ماه لازمه.')}
+let i=db.items[cur];
+if(o>0){if(!i)return msg('فروش فقط برای کالای ثبت‌شده‌ست');if(ok==='')return msg('سری رو انتخاب کن');
+const bi=document.querySelector('#bat input[data-k="'+ok+'"]'),t0=bi?n(bi.value):0;if(o>t0)return msg('این سری فقط '+t0+' تا موجوده')}
+if(!i){i=Object.values(db.items).find(x=>x.cat===cat&&nz(x.name)===nz(name));if(!i){const id='i'+Date.now().toString(36);i=db.items[id]={id,name,cat,min:0,batches:[]}}}
+i.name=name;i.cat=cat;i.min=n($('min').value);
+document.querySelectorAll('#bat input').forEach(x=>{const b=i.batches[+x.dataset.k];if(b)b.qty=n(x.value)});
+if(o>0)i.batches[+ok].qty-=o;
+if(qn>0){const b=i.batches.find(b=>b.exp===exp);b?b.qty+=qn:i.batches.push({qty:qn,exp})}
+i.batches=i.batches.filter(b=>b.qty>0);persist();$('form').hidden=true;render()}
+const armed={};function arm(b,fn){if(armed[b.id]){clearTimeout(armed[b.id]);armed[b.id]=0;b.textContent=b.dataset.t;fn();return}
+b.dataset.t=b.textContent;b.textContent='مطمئنی؟ دوباره بزن';armed[b.id]=setTimeout(()=>{armed[b.id]=0;b.textContent=b.dataset.t},4000)}
+$('add').onclick=()=>openItem('');$('cc').onclick=()=>{$('form').hidden=true};$('sv').onclick=saveItem;
+$('del').onclick=e=>arm(e.target,()=>{delete db.items[cur];persist();$('form').hidden=true;render()});
+$('name').oninput=()=>{const t=$('name').value;$('sg').innerHTML=(!db.items[cur]&&t.trim().length>=2)?Object.values(db.items).filter(i=>sm(i.name,t)).slice(0,4).map(i=>`<button data-s="${esc(i.id)}">${esc(i.name)} · ${CT[i.cat]}</button>`).join(''):''};
+$('sg').onclick=e=>{const b=e.target.closest('button');if(b)openItem(b.dataset.s)};
+$('q').oninput=render;$('fc').onchange=render;$('list').onclick=e=>{const c=e.target.closest('.card');if(c)openItem(c.dataset.c)};
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{filter=b.dataset.f;render()});
+function calChange(px){const s=$(px+'c'),old=s.dataset.p||db.cal,v=getDate(px,old);s.dataset.p=s.value;db.cal=s.value;['e','d'].forEach(x=>{if(x!==px){$(x+'c').value=s.value;$(x+'c').dataset.p=s.value}});if(v)setDate(px,v);persist();render();renderP();if(curP)renderE()}
+$('ec').onchange=()=>calChange('e');$('dc').onchange=()=>calChange('d');
+/* قرض و بدهی */
+function renderP(){const qq=$('pq').value,L=Object.values(db.people).filter(p=>sm(p.name,qq)).sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+$('pl').innerHTML=L.length?L.map(p=>{const last=p.entries.map(e=>e.date).sort().pop();return `<div class="card" data-p="${p.id}"><div class="row"><b>${esc(p.name)}</b><span class="mu s">${p.entries.length} ثبت</span></div>${last?`<div class="mu s">آخرین ثبت: ${fmt(last)}</div>`:''}</div>`}).join(''):'<p class="mu">هنوز کسی ثبت نشده.</p>'}
+const nextId=a=>a.reduce((m,x)=>Math.max(m,x.id),0)+1,allE=()=>Object.values(db.people).flatMap(p=>p.entries);
+$('pa').onclick=()=>{const nm=$('pn').value.trim();if(!nm)return;const id=nextId(Object.values(db.people));db.people[id]={id,name:nm,entries:[]};$('pn').value='';persist();renderP();openP(id)};
+$('pq').oninput=renderP;$('pl').onclick=e=>{const c=e.target.closest('.card');if(c)openP(+c.dataset.p)};
+function openP(id){curP=id;$('pl0').hidden=true;$('pp').hidden=false;$('pname').value=db.people[id].name;resetE();renderE();scrollTo(0,0)}
+function resetE(){curE=0;$('dir').value='gave';$('amt').value='';$('note').value='';setDate('d',todayISO());$('edel').hidden=true;emsg('')}
+function renderE(){const p=db.people[curP],L=[...p.entries].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+$('el').innerHTML=L.length?L.map(e=>`<div class="card" data-e="${e.id}"><div class="row"><span class="bg ${e.dir==='gave'?'a':'g'}">${e.dir==='gave'?'به او دادم':'از او گرفتم'}</span><b>${e.amount.toLocaleString('en-US')}</b></div><div class="mu s">${fmt(e.date)}${e.note?' · '+esc(e.note):''}</div></div>`).join(''):'<p class="mu">هنوز ثبتی نیست.</p>'}
+$('es').onclick=()=>{const p=db.people[curP],a=n($('amt').value);if(!a)return emsg('مبلغ رو بزن');
+const filled=$('dy').value||$('dm').value||$('dd').value,d=filled?getDate('d'):todayISO();if(!d)return emsg('تاریخ درست نیست. سال و ماه لازمه.');
+const o={date:d,dir:$('dir').value,amount:a,note:$('note').value.trim()};
+if(curE){Object.assign(p.entries.find(x=>x.id===curE),o)}else p.entries.push({id:nextId(allE()),...o});
+persist();resetE();renderE();renderP()};
+$('er').onclick=resetE;
+$('el').onclick=ev=>{const c=ev.target.closest('.card');if(!c)return;const e=db.people[curP].entries.find(x=>x.id===+c.dataset.e);curE=e.id;$('dir').value=e.dir;$('amt').value=e.amount;$('note').value=e.note||'';setDate('d',e.date);$('edel').hidden=false;emsg('در حال ویرایش این ثبت');scrollTo(0,0)};
+$('edel').onclick=ev=>arm(ev.target,()=>{const p=db.people[curP];p.entries=p.entries.filter(x=>x.id!==curE);persist();resetE();renderE();renderP()});
+$('pname').onchange=()=>{const v=$('pname').value.trim();if(v){db.people[curP].name=v;persist();renderP()}else $('pname').value=db.people[curP].name};
+$('pb').onclick=()=>{curP=0;$('pp').hidden=true;$('pl0').hidden=false;renderP()};
+$('pdel').onclick=ev=>arm(ev.target,()=>{delete db.people[curP];persist();$('pb').onclick()});
+/* تب‌ها و تنظیمات */
+function tab(t){$('v1').hidden=t!==1;$('v2').hidden=t!==2;$('t1').classList.toggle('on',t===1);$('t2').classList.toggle('on',t===2)}
+$('t1').onclick=()=>tab(1);$('t2').onclick=()=>tab(2);
+$('st').onclick=async()=>{$('bks').hidden=!$('bks').hidden;if($('bks').hidden)return;const ks=(await kkeys()).filter(x=>String(x).startsWith('s:')).sort().reverse();
+$('snaps').innerHTML=ks.length?ks.map((k,i)=>`<button class="chip dn" id="sn${i}" data-k="${k}">${fmt(k.slice(2))}</button>`).join(''):'<span class="mu s">هنوز نسخه‌ای نیست</span>'};
+$('snaps').onclick=ev=>{const b=ev.target.closest('button');if(b)arm(b,async()=>{await restore(await kget(b.dataset.k))})};
+$('days').onchange=()=>{db.days=n($('days').value)||90;persist();render()};
+async function restore(buf){try{buf=new Uint8Array(buf);const t=new SQL.Database(buf);t.exec('SELECT count(*) FROM items');t.close();S.close();S=new SQL.Database(buf);S.run(SCHEMA);readAll();persist();initUI();bmsg('بازیابی شد: '+Object.keys(db.items).length+' قلم و '+Object.keys(db.people).length+' فرد')}catch(e){bmsg('فایل پشتیبان درست نیست')}}
+$('ex').onclick=async()=>{try{clearTimeout(pt);writeAll();const data=S.export(),name='amiripour-'+todayISO()+'.db';
+for(const[nm,ty]of[[name,'application/octet-stream'],[name+'.txt','text/plain']]){const f=new File([data],nm,{type:ty});if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'پشتیبان dr amiripour'});return bmsg('ارسال شد')}catch(e){if(e.name==='AbortError')return}}}
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data]));a.download=name;a.click();bmsg('فایل دانلود شد. از پوشه دانلودها توی پیام‌رسان بفرستش.')}catch(e){bmsg('خطا: '+e.message)}};
+$('im').onclick=ev=>arm(ev.target,()=>$('fl').click());
+$('fl').onchange=async()=>{const f=$('fl').files[0];$('fl').value='';if(!f)return;const buf=new Uint8Array(await f.arrayBuffer());
+if(new TextDecoder().decode(buf.slice(0,15))==='SQLite format 3')return restore(buf);legacy(new TextDecoder().decode(buf))};
+function legacy(t){try{const o=JSON.parse(t.trim());if(!o||typeof o.items!=='object')throw 0;db={items:o.items,people:{},days:+o.days||90,cal:o.cal||'j'};mig();persist();initUI();bmsg('وارد شد: '+Object.keys(db.items).length+' قلم')}catch(e){bmsg('متن یا فایل پشتیبان درست نیست')}}
+$('ol').onclick=ev=>arm(ev.target,()=>legacy($('bk').value));
+$('cp').onclick=async()=>{const o=nz($('op').value),nw=nz($('np').value);if(!/^\d{4}$/.test(nw))return bmsg('رمز جدید باید ۴ رقم باشه');
+if(await sha(o)!==localStorage.getItem('pin_h'))return bmsg('رمز فعلی اشتباهه');localStorage.setItem('pin_h',await sha(nw));$('op').value=$('np').value='';bmsg('رمز عوض شد')};
+function clock(){const t=new Date();$('ft').textContent='امروز: '+t.toLocaleDateString('fa-IR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' | '+t.toLocaleDateString('en-CA')+' | ساعت '+t.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}
+setInterval(clock,20000);clock();document.addEventListener('visibilitychange',()=>{clock();if(S&&!$('app').hidden)render()});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
